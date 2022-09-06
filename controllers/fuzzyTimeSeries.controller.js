@@ -39,10 +39,11 @@ const fuzzyTimeSeriesCtrl = {
       let X2 = Xmax - XmaxRounding;
 
       // Cluster
-      let cluster = 1 + 3.322 * Math.log10(30);
+      let cluster = 1 + 3.322 * Math.log10(newData.length);
 
       // Rounding cluster
       let roundedCluster = Math.round(cluster);
+      console.log(cluster, "THIS IS BLABLA");
 
       // Interval
       let interval = (XmaxRounding - XminRounding) / roundedCluster; // 6 diganti menjadi log jika log tidak salah
@@ -66,7 +67,7 @@ const fuzzyTimeSeriesCtrl = {
       // Menghitung batas Atas
       let batasAtasArray = [];
       let batasAtas = XminRounding;
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= roundedCluster; i++) {
         batasAtas += interval;
         batasAtasArray.push(batasAtas);
       }
@@ -157,7 +158,7 @@ const fuzzyTimeSeriesCtrl = {
       let XmaxRounding = Math.round(Xmax / 10) * 10;
 
       // Cluster
-      let cluster = 1 + 3.322 * Math.log10(30);
+      let cluster = 1 + 3.322 * Math.log10(newData.length);
 
       // Rounding cluster
       let roundedCluster = Math.round(cluster);
@@ -212,7 +213,7 @@ const fuzzyTimeSeriesCtrl = {
           status: true,
           data: {
             title: "FuzzySet",
-            head: ["Interval", "Batas Bawah", "Batas Atas"],
+            head: ["Universe", "Batas Bawah", "Batas Atas"],
             body: newDataArray,
           },
           message: "Ambil Data Fuzzyset Berhasil.",
@@ -264,7 +265,7 @@ const fuzzyTimeSeriesCtrl = {
       let XmaxRounding = Math.round(Xmax / 10) * 10;
 
       // Cluster
-      let cluster = 1 + 3.322 * Math.log10(30);
+      let cluster = 1 + 3.322 * Math.log10(newData.length);
 
       // Rounding cluster
       let roundedCluster = Math.round(cluster);
@@ -403,7 +404,7 @@ const fuzzyTimeSeriesCtrl = {
       let XmaxRounding = Math.round(Xmax / 10) * 10;
 
       // Cluster
-      let cluster = 1 + 3.322 * Math.log10(30);
+      let cluster = 1 + 3.322 * Math.log10(newData.length);
 
       // Rounding cluster
       let roundedCluster = Math.round(cluster);
@@ -471,8 +472,6 @@ const fuzzyTimeSeriesCtrl = {
         newDataIntervalArray,
         arrayIndex
       );
-
-      console.log(theData.fuzzifikasi);
 
       // mengubah data menjadi FLR
       let flrData = [];
@@ -544,7 +543,7 @@ const fuzzyTimeSeriesCtrl = {
       let XmaxRounding = Math.round(Xmax / 10) * 10;
 
       // Cluster
-      let cluster = 1 + 3.322 * Math.log10(30);
+      let cluster = 1 + 3.322 * Math.log10(newData.length);
 
       // Rounding cluster
       let roundedCluster = Math.round(cluster);
@@ -620,13 +619,28 @@ const fuzzyTimeSeriesCtrl = {
       }
 
       // FLRG SORTING
+      // let flrgData = [];
+      // for (let i = 0; i < roundedCluster; i++) {
+      //   let key = `A${i + 1}`;
+      //   let arr = [];
+      //   flrData.forEach((value) => {
+      //     if (value[0] === key || value[1] === key) {
+      //       arr.push(value);
+      //     }
+      //   });
+      //   let data = {
+      //     key,
+      //     arr,
+      //   };
+      //   flrgData.push(data);
+      // }
       let flrgData = [];
       for (let i = 0; i < roundedCluster; i++) {
         let key = `A${i + 1}`;
         let arr = [];
         flrData.forEach((value) => {
-          if (value[0] === key || value[1] === key) {
-            arr.push(value);
+          if (value[0] === key) {
+            arr.push(value[1]);
           }
         });
         let data = {
@@ -636,29 +650,31 @@ const fuzzyTimeSeriesCtrl = {
         flrgData.push(data);
       }
 
-      //2D ARR INTO 1D ARR
-      let newFLrgData = [];
-      flrgData.map((value) => {
-        var merged = value.arr.reduce(function (prev, next) {
-          return prev.concat(next);
-        });
-        newFLrgData.push({
-          key: value.key,
-          data: merged,
-        });
-      });
+      console.log(flrgData, "FLRG DATA GAMING");
 
-      // REMOVING DUPLICATE DATA
-      let fixedFLrgData = [];
-      newFLrgData.map((value) => {
-        var fixedData = value.data.filter(function (item, index, inputArray) {
-          return inputArray.indexOf(item) == index;
-        });
-        fixedFLrgData.push({
-          key: value.key,
-          data: fixedData,
-        });
-      });
+      // //2D ARR INTO 1D ARR
+      // let newFLrgData = [];
+      // flrgData.map((value) => {
+      //   var merged = value.arr.reduce(function (prev, next) {
+      //     return prev.concat(next);
+      //   });
+      //   newFLrgData.push({
+      //     key: value.key,
+      //     data: merged,
+      //   });
+      // });
+
+      // // REMOVING DUPLICATE DATA
+      // let fixedFLrgData = [];
+      // newFLrgData.map((value) => {
+      //   var fixedData = value.data.filter(function (item, index, inputArray) {
+      //     return inputArray.indexOf(item) == index;
+      //   });
+      //   fixedFLrgData.push({
+      //     key: value.key,
+      //     data: fixedData,
+      //   });
+      // });
 
       if (!data) {
         return res.status(500).json({
@@ -673,7 +689,7 @@ const fuzzyTimeSeriesCtrl = {
           data: {
             title: "Fuzzy Logic Relationship Group",
             head: ["NO", "Ui", "Fuzzy Logic Relationship (FLRG)"],
-            body: [...fixedFLrgData],
+            body: [...flrgData],
           },
           message: "Ambil Data FLRG Berhasil.",
           error: null,

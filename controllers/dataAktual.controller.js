@@ -12,20 +12,20 @@ const dataAktualCtrl = {
 
       let data = await gsapi.spreadsheets.values.get(option);
 
+      data.data.values.shift();
+
       if (!data) {
-        return res
-          .status(500)
-          .json({
-            status: false,
-            data: null,
-            message: "Data doesnt exists.",
-            error: null,
-          });
+        return res.status(500).json({
+          status: false,
+          data: null,
+          message: "Data doesnt exists.",
+          error: null,
+        });
       } else {
         res.status(200).json({
           status: true,
           data: {
-            head: data.data.values.shift(),
+            head: ["No", "Date", "waktu", "Konsentrasi CO"],
             body: data.data.values,
           },
           message: "Ambil Data Aktual Berhasil.",

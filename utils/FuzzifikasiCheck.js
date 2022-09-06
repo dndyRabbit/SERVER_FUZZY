@@ -3,9 +3,6 @@ function FuzzifikasiNumberChecking(dataAktual, intervals) {
   let fuzzifikasi = [];
   let newDataAktual = [];
 
-  console.log(dataAktual, "DATA AKTUAL");
-  console.log(intervals, "INTERVALS");
-
   dataAktual.forEach((aktual) => {
     for (let i = 0; i < intervals.length; i++) {
       if (intervals[i][0] <= aktual && intervals[i][1] >= aktual) {
